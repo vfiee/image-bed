@@ -1,4 +1,4 @@
-# Image Bed
+# Image Bed 
 
 一个基于 Vue3 + Telegram Bot API 的简单图床系统，支持本地上传图片并存储到 Telegram。
 
