@@ -1,0 +1,7 @@
+name = "image-bed"
+type = "javascript"
+workers_dev = true
+
+[env.production]
+account_id = "your-account-id"
+route = "https://your-domain.com/*"

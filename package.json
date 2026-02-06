@@ -1,0 +1,30 @@
+{
+  "name": "image-bed",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .vue,.js,.jsx,.cjs,.mjs --fix",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "ant-design-vue": "^4.1.0",
+    "vue-router": "^4.2.5",
+    "pinia": "^2.1.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.0",
+    "vite": "^4.5.0",
+    "unocss": "^0.57.0",
+    "@unocss/reset": "^0.57.0",
+    "@unocss/preset-attributify": "^0.57.0",
+    "@unocss/preset-uno": "^0.57.0",
+    "@unocss/transformer-directives": "^0.57.0",
+    "eslint": "^8.53.0",
+    "prettier": "^3.1.0",
+    "eslint-plugin-vue": "^9.18.1"
+  }
+}
