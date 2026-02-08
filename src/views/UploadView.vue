@@ -1,24 +1,15 @@
 <!-- src/views/UploadView.vue -->
 <template>
   <div class="upload-container max-w-4xl mx-auto">
-    <!-- 配置面板 -->
-    <div class="card mb-6 p-4">
-      <h2 class="text-lg font-semibold mb-3">Telegram Bot 配置</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <a-input 
-          v-model:value="botToken" 
-          placeholder="请输入 Telegram Bot Token"
-          allow-clear
-        />
-        <a-input 
-          v-model:value="chatId" 
-          placeholder="请输入 Chat ID (可选，默认使用botToken对应的bot)"
-          allow-clear
-        />
-      </div>
-      <div class="mt-3 text-sm text-gray-500">
-        <p>💡 获取Bot Token: 在 Telegram 中联系 @BotFather 创建机器人</p>
-        <p>💡 获取Chat ID: 可通过 @userinfobot 或发送消息到机器人后查看webhook回调</p>
+    <div class="card mb-6" v-if="!botToken || !chatId">
+      <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h3 class="text-lg font-medium text-yellow-800 mb-2">环境配置提示</h3>
+        <p class="text-yellow-700 mb-2">当前未检测到环境变量配置的Bot Token和Chat ID</p>
+        <p class="text-sm text-yellow-600">请联系管理员配置环境变量：</p>
+        <ul class="text-sm text-yellow-600 mt-1">
+          <li>VITE_TELEGRAM_BOT_TOKEN - Telegram Bot Token</li>
+          <li>VITE_TELEGRAM_CHAT_ID - Telegram Chat ID</li>
+        </ul>
       </div>
     </div>
 
@@ -159,17 +150,10 @@ const uploadedImages = ref([])
 const uploading = ref(false)
 const progressVisible = ref(false)
 const uploadProgress = ref([])
-const botToken = ref('')
-const chatId = ref('')
 
-// 从localStorage加载配置
-onMounted(() => {
-  const savedToken = localStorage.getItem('telegramBotToken')
-  const savedChatId = localStorage.getItem('telegramChatId')
-  
-  if (savedToken) botToken.value = savedToken
-  if (savedChatId) chatId.value = savedChatId
-})
+// 从环境变量读取配置
+const botToken = ref(import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '')
+const chatId = ref(import.meta.env.VITE_TELEGRAM_CHAT_ID || '')
 
 // 文件选择处理
 const handleFileSelect = (event) => {
@@ -219,14 +203,8 @@ const removeFile = (index) => {
 const uploadToTelegram = async () => {
   if (selectedFiles.value.length === 0) return
   if (!botToken.value) {
-    message.error('请先配置 Telegram Bot Token')
+    message.error('未配置 Telegram Bot Token')
     return
-  }
-  
-  // 保存配置到localStorage
-  localStorage.setItem('telegramBotToken', botToken.value)
-  if (chatId.value) {
-    localStorage.setItem('telegramChatId', chatId.value)
   }
   
   uploading.value = true
@@ -240,7 +218,7 @@ const uploadToTelegram = async () => {
   
   try {
     // 初始化Telegram API
-    const telegramApi = new TelegramApi(botToken.value, chatId.value || botToken.value.split(':')[0]) // 简化的chatId获取
+    const telegramApi = new TelegramApi(botToken.value, chatId.value)
     
     // 逐个上传图片
     for (let i = 0; i < selectedFiles.value.length; i++) {
